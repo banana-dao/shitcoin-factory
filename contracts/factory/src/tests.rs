@@ -2,9 +2,12 @@ use crate::msg::{
     ExecuteMsg, InstantiateMsg, MintableResponse, QueryMsg, Receiver, TokenInfoResponse,
 };
 use cosmwasm_std::{Coin, Uint128};
-use osmosis_test_tube::osmosis_std::types::cosmos::bank::v1beta1::QueryBalanceRequest;
-use osmosis_test_tube::TokenFactory;
-use osmosis_test_tube::{Account, Bank, Module, OsmosisTestApp, SigningAccount, Wasm, osmosis_std::types::osmosis::tokenfactory::v1beta1::QueryDenomAuthorityMetadataRequest,
+use osmosis_test_tube::{
+    osmosis_std::types::{
+        cosmos::bank::v1beta1::QueryBalanceRequest,
+        osmosis::tokenfactory::v1beta1::QueryDenomAuthorityMetadataRequest,
+    },
+    Account, Bank, Module, OsmosisTestApp, SigningAccount, TokenFactory, Wasm,
 };
 
 struct TestEnv {
@@ -36,7 +39,7 @@ fn instantiate_contract(initial_supply: Uint128, max_supply: Uint128) -> TestEnv
         .init_account(&[Coin::new(1_000_000_000_000, "uosmo")])
         .unwrap();
 
-    let users: Vec<SigningAccount> = app.init_accounts(&[], 10).unwrap();
+    let users: Vec<SigningAccount> = app.init_accounts(&[], 2).unwrap();
 
     let mut test_env = TestEnv {
         app,
@@ -286,10 +289,15 @@ fn test_revoke() {
 
     assert!(res.is_err());
 
-    let new_admin = modules.tf.query_denom_authority_metadata(&QueryDenomAuthorityMetadataRequest{
-        denom: test_env.denom.clone(),
-    }).unwrap().authority_metadata.unwrap().admin;
-
+    let new_admin = modules
+        .tf
+        .query_denom_authority_metadata(&QueryDenomAuthorityMetadataRequest {
+            denom: test_env.denom.clone(),
+        })
+        .unwrap()
+        .authority_metadata
+        .unwrap()
+        .admin;
 
     // ensure the new admin is the expected null address
     assert_eq!(new_admin, "osmo1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqmcn030");

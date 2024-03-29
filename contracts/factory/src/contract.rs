@@ -61,8 +61,8 @@ pub fn instantiate(
     if initial_supply.is_zero() {
         return Ok(Response::new()
             .add_message(create_msg)
-            .add_attribute("action", "instantiate")
-            .add_attribute("action", "create_denom"));
+            .add_attribute("action", "factory_instantiate")
+            .add_attribute("action", "factory_create_denom"));
     };
 
     // otherwise mint the initial supply to the contract address
@@ -79,8 +79,8 @@ pub fn instantiate(
     Ok(Response::new()
         .add_message(create_msg)
         .add_message(mint_msg)
-        .add_attribute("action", "instantiate")
-        .add_attribute("action", "create_denom")
+        .add_attribute("action", "factory_instantiate")
+        .add_attribute("action", "factory_create_denom")
         .add_attribute("initial_mint", initial_supply.to_string()))
 }
 
@@ -156,7 +156,7 @@ fn execute_mint(
 
     Ok(Response::new()
         .add_messages(msgs)
-        .add_attribute("action", "mint")
+        .add_attribute("action", "factory_mint")
         .add_attributes(attributes)
         .add_attribute("total_minted", total_minted.to_string()))
 }
@@ -178,7 +178,7 @@ fn execute_burn(
 
     Ok(Response::new()
         .add_message(msg)
-        .add_attribute("action", "burn")
+        .add_attribute("action", "factory_burn")
         .add_attribute("amount", burn_amount.to_string()))
 }
 
@@ -216,7 +216,7 @@ fn execute_transfer(deps: DepsMut, messages: &[Receiver]) -> Result<Response, Co
     }
     Ok(Response::new()
         .add_messages(msgs)
-        .add_attribute("action", "transfer")
+        .add_attribute("action", "factory_transfer")
         .add_attributes(attributes)
         .add_attribute("total_transferred", total_to_transfer.to_string()))
 }
@@ -236,7 +236,7 @@ fn execute_revoke(deps: DepsMut, contract: Addr) -> Result<Response, ContractErr
     .into();
     Ok(Response::new()
         .add_message(msg)
-        .add_attribute("action", "burn_minter"))
+        .add_attribute("action", "factory_revoke"))
 }
 
 fn execute_update_supply(deps: DepsMut, new_max: &Uint128) -> Result<Response, ContractError> {
@@ -248,7 +248,7 @@ fn execute_update_supply(deps: DepsMut, new_max: &Uint128) -> Result<Response, C
     }
 
     MAX_SUPPLY.save(deps.storage, &new_max.u128())?;
-    Ok(Response::new().add_attribute("action", "update_metadata"))
+    Ok(Response::new().add_attribute("action", "factory_update_supply"))
 }
 
 #[cfg_attr(not(feature = "library"), entry_point)]

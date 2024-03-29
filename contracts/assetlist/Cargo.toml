@@ -1,0 +1,22 @@
+[package]
+name = "assetlist"
+version = "0.1.0"
+edition = "2021"
+authors = ["BananaDAO"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+cosmwasm-schema = { workspace = true }
+cosmwasm-std = { workspace = true }
+cw-storage-plus = { workspace = true }
+cw-utils = { workspace = true }
+cw2 = { workspace = true }
+osmosis-std = { workspace = true }
+schemars = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+osmosis-test-tube = { workspace = true }
