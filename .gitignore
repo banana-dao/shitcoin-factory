@@ -1,0 +1,5 @@
+*.wasm
+.vscode/
+target/
+schema/
+Cargo.lock

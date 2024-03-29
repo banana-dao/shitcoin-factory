@@ -1,0 +1,26 @@
+[workspace]
+members = ["contracts/*"]
+resolver = "2"
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+panic = 'abort'
+overflow-checks = true
+
+[workspace.dependencies]
+cosmwasm-schema = "1.5.0"
+cosmwasm-std = "1.5.0"
+cw-storage-plus = "1.2.0"
+cw-utils = "1.0.3"
+cw2 = "1.1.2"
+cw721 = "0.18.0"
+osmosis-std = "0.22.0"
+osmosis-test-tube = "22.0.0"
+schemars = "0.8.16"
+serde = { version = "1.0.193", features = ["derive"] }
+thiserror = "1.0.50"
