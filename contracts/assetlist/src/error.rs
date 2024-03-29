@@ -19,6 +19,18 @@ pub enum ContractError {
     #[error("Not authorized to edit/remove this listing")]
     Unauthorized,
 
+    #[error("Valid fees are required to add a listing")]
+    MissingFee,
+
+    #[error("Entire fee must be paid in one of the accepted tokens")]
+    MultipleFees,
+
+    #[error("Invalid fee token")]
+    InvalidFee,
+
+    #[error("Insufficient fee paid")]
+    InsufficientFee,
+
     #[error("Duplicate listing found for {}", 0)]
     DuplicateListing(String),
 

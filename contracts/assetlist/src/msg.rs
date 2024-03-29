@@ -13,9 +13,9 @@ pub enum ExecuteMsg {
 #[cw_serde]
 pub enum ListingMsg {
     // Adds listings to the assetlist
-    Add(Vec<Metadata>),
+    Add(Vec<(String, Metadata)>),
     // Update existing listings
-    Update(Vec<Metadata>),
+    Update(Vec<(String, Metadata)>),
     // Removes listings from the assetlist by denom. Must be done by the listing creator or an admin
     Remove(Vec<String>),
 }
@@ -23,7 +23,7 @@ pub enum ListingMsg {
 #[cw_serde]
 #[derive(QueryResponses)]
 pub enum QueryMsg {
-    #[returns(Vec<Metadata>)]
+    #[returns(Vec<(String, Metadata)>)]
     Listing(ListingQuery),
     #[returns(Config)]
     Config,
@@ -41,3 +41,6 @@ pub enum ListingQuery {
         limit: Option<u32>,
     },
 }
+
+#[cw_serde]
+pub struct MigrateMsg {}

@@ -1,5 +1,5 @@
 use cosmwasm_schema::cw_serde;
-use cosmwasm_std::Addr;
+use cosmwasm_std::{Addr, Coin};
 use cw_storage_plus::{Item, Map};
 
 #[repr(u8)]
@@ -20,7 +20,8 @@ impl TopKey {
 }
 
 pub const CONFIG: Item<Config> = Item::new(TopKey::Config.as_str());
-pub const DENOM_MAP: Map<String, Metadata> = Map::new(TopKey::DenomMap.as_str());
+// maps on chain denom to metadata
+pub const DENOM_MAP: Map<String, Listing> = Map::new(TopKey::DenomMap.as_str());
 // maps symbols to denoms, to allow reverse lookup without iterating over or re-storing all metadata
 pub const SYMBOL_MAP: Map<String, String> = Map::new(TopKey::SymbolMap.as_str());
 
@@ -32,6 +33,8 @@ pub struct Config {
     pub remove_permissioned: Option<bool>,
     // The fields that are required for each listing
     pub required_fields: Option<Vec<Field>>,
+    // A list of accepted fees that can be charged per listing to prevent spam
+    pub fee: Option<Vec<Coin>>,
     // Admins who can manage the asset list. The contract owner will be assigned automatically
     pub admins: Option<Vec<Addr>>,
     // The owner of the contract. Defaults to the instantiator
@@ -46,21 +49,20 @@ pub enum Field {
 }
 
 #[cw_serde]
-pub struct Metadata {
-    pub denom: String,
-    pub symbol: String,
-    pub exp: Option<u32>,
-    pub logo: Option<String>,
-    pub chain: Option<String>,
-    author: Addr,
+pub struct Listing {
+    // The address of the contract that published this listing. None if it was added by an admin
+    pub author: Option<String>,
+    pub metadata: Metadata,
 }
 
-impl Metadata {
-    pub fn get_author(&self) -> Addr {
-        self.author.clone()
-    }
-
-    pub fn set_author(&mut self, author: Addr) {
-        self.author = author;
-    }
+#[cw_serde]
+pub struct Metadata {
+    // human readable name
+    pub symbol: String,
+    // exponent for conversion from base units
+    pub exp: Option<u32>,
+    // URL to a logo image
+    pub logo: Option<String>,
+    // source chain identifier
+    pub chain: Option<String>,
 }

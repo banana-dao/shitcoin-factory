@@ -12,7 +12,7 @@ use osmosis_std::types::osmosis::tokenfactory::v1beta1::{
     MsgBurn, MsgChangeAdmin, MsgCreateDenom, MsgMint, TokenfactoryQuerier,
 };
 
-// version info for migration info
+// version info
 const CONTRACT_NAME: &str = env!("CARGO_PKG_NAME");
 const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -24,7 +24,7 @@ pub fn instantiate(
     msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
     // use the sender as the admin, unless one is provided. validate the admin address
-    let admin = msg.admin.unwrap_or(info.sender.clone());
+    let admin = msg.admin.unwrap_or(info.sender);
     deps.api.addr_validate(admin.as_str())?;
 
     let initial_supply = msg.initial_supply.unwrap_or(Uint128::zero());
